@@ -142,7 +142,7 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultVal
 
 	return AccountInfo{
 		Lamports:   v.Lamports,
-		Owner:      v.Owner,
+		Owner:      v.Data.Parsed.Info.Owner,
 		Executable: v.Executable,
 		RentEpoch:  v.RentEpoch,
 		Data:       []byte{},
