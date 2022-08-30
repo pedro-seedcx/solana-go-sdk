@@ -108,7 +108,8 @@ type AccountInfo struct {
 // GetAccountInfo return account's info
 func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (AccountInfo, error) {
 	return c.processGetAccountInfo(c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
-		Encoding: rpc.GetAccountInfoConfigEncodingBase64,
+		Encoding:   rpc.GetAccountInfoConfigEncodingJsonParsed,
+		Commitment: rpc.CommitmentConfirmed,
 	}))
 }
 
@@ -139,23 +140,12 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.GetAccountInfoResultVal
 		return AccountInfo{}, nil
 	}
 
-	data, ok := v.Data.([]interface{})
-	if !ok {
-		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []interface{}")
-	}
-	if data[1] != string(rpc.GetAccountInfoConfigEncodingBase64) {
-		return AccountInfo{}, fmt.Errorf("encoding mistmatch")
-	}
-	rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
-	if err != nil {
-		return AccountInfo{}, fmt.Errorf("failed to base64 decode data")
-	}
 	return AccountInfo{
 		Lamports:   v.Lamports,
 		Owner:      v.Owner,
 		Executable: v.Executable,
 		RentEpoch:  v.RentEpoch,
-		Data:       rawData,
+		Data:       []byte{},
 	}, nil
 }
 
