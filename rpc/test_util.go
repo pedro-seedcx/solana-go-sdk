@@ -30,7 +30,7 @@ func testRpcCall(t *testing.T, param testRpcCallParam) {
 	}))
 
 	// test call
-	got, err := param.RpcCall(NewRpcClient(server.URL))
+	got, err := param.RpcCall(NewRpcClient(server.URL, ""))
 	assert.Equal(t, param.ExpectedError, err)
 	assert.Equal(t, param.ExpectedResponse, got)
 
