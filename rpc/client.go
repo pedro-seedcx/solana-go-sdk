@@ -3,6 +3,7 @@ package rpc
 import (
 	"bytes"
 	"context"
+	b64 "encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -45,10 +46,11 @@ type GeneralResponse struct {
 
 type RpcClient struct {
 	endpoint string
+	login    string
 }
 
-func NewRpcClient(endpoint string) RpcClient {
-	return RpcClient{endpoint: endpoint}
+func NewRpcClient(endpoint, login string) RpcClient {
+	return RpcClient{endpoint: endpoint, login: login}
 }
 
 // Call will return body of response. if http code beyond 200~300, the error also returns.
@@ -65,6 +67,10 @@ func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, er
 		return nil, fmt.Errorf("failed to do http.NewRequestWithContext, err: %v", err)
 	}
 	req.Header.Add("Content-Type", "application/json")
+
+	// Adding login for the call
+	base64Auth := b64.StdEncoding.EncodeToString([]byte(c.login))
+	req.Header.Add("Authorization", "Basic "+base64Auth)
 
 	// do request
 	httpclient := &http.Client{}
