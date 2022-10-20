@@ -46,7 +46,7 @@ type GetBlockConfig struct {
 	TransactionDetails             GetBlockConfigTransactionDetails `json:"transactionDetails,omitempty"` // default: "full", either "full", "signatures", "none"
 	Rewards                        *bool                            `json:"rewards,omitempty"`            // default: true
 	Commitment                     Commitment                       `json:"commitment,omitempty"`         // "processed" is not supported
-	MaxSupportedTransactionVersion string                           `json:"maxSupportedTransactionVersion,omitempty"`
+	MaxSupportedTransactionVersion uint64                           `json:"maxSupportedTransactionVersion,omitempty"`
 }
 
 type GetBlockConfigEncoding string
@@ -58,7 +58,7 @@ const (
 	GetBlockConfigEncodingBase64     GetBlockConfigEncoding = "base64"
 )
 
-const GetBlockConfigMaxSupportedVersionZero string = "0"
+const GetBlockConfigMaxSupportedVersionZero uint64 = 0
 
 type GetBlockConfigTransactionDetails string
 
