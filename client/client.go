@@ -575,12 +575,14 @@ type GetBlockTransaction struct {
 
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
 func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
+	zeroVersion := new(uint8)
+	*zeroVersion = 0
 	res, err := c.RpcClient.GetBlockWithConfig(
 		ctx,
 		slot,
 		rpc.GetBlockConfig{
 			Encoding:                       rpc.GetBlockConfigEncodingBase64,
-			MaxSupportedTransactionVersion: 0,
+			MaxSupportedTransactionVersion: zeroVersion,
 		},
 	)
 	err = checkRpcResult(res.GeneralResponse, err)
