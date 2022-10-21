@@ -55,7 +55,6 @@ func NewRpcClient(endpoint string) RpcClient {
 func (c *RpcClient) Call(ctx context.Context, params ...interface{}) ([]byte, error) {
 	// prepare payload
 	j, err := preparePayload(params)
-	fmt.Printf("Payload %+v", j)
 	if err != nil {
 		return nil, fmt.Errorf("failed to prepare payload, err: %v", err)
 	}

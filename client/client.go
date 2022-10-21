@@ -580,7 +580,7 @@ func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, e
 		slot,
 		rpc.GetBlockConfig{
 			Encoding:                       rpc.GetBlockConfigEncodingBase64,
-			MaxSupportedTransactionVersion: rpc.GetBlockConfigMaxSupportedVersionZero,
+			MaxSupportedTransactionVersion: 0,
 		},
 	)
 	err = checkRpcResult(res.GeneralResponse, err)
