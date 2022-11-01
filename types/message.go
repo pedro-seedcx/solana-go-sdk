@@ -85,10 +85,11 @@ func MessageDeserialize(messageData []byte) (Message, error) {
 	list := []*uint8{&numRequireSignatures, &numReadonlySignedAccounts, &numReadonlyUnsignedAccounts}
 	for i := 0; i < len(list); i++ {
 		t, err = parseUvarint(&messageData)
-		if t > 255 {
+		if t > 255 && err != nil {
 			return Message{}, fmt.Errorf("message header #%d parse error: %v", i+1, err)
+		} else if t <= 255 {
+			*list[i] = uint8(t)
 		}
-		*list[i] = uint8(t)
 	}
 
 	accountCount, err := parseUvarint(&messageData)
