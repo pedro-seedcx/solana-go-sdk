@@ -36,13 +36,15 @@ const (
 type GetBlockTransaction struct {
 	Transaction any              `json:"transaction"`
 	Meta        *TransactionMeta `json:"meta"`
+	Version     any              `json:"version"`
 }
 
 type GetBlockConfig struct {
-	Encoding           GetBlockConfigEncoding           `json:"encoding,omitempty"`           // default: "json"
-	TransactionDetails GetBlockConfigTransactionDetails `json:"transactionDetails,omitempty"` // default: "full", either "full", "signatures", "none"
-	Rewards            *bool                            `json:"rewards,omitempty"`            // default: true
-	Commitment         Commitment                       `json:"commitment,omitempty"`         // "processed" is not supported
+	Encoding                       GetBlockConfigEncoding           `json:"encoding,omitempty"`                       // default: "json"
+	TransactionDetails             GetBlockConfigTransactionDetails `json:"transactionDetails,omitempty"`             // default: "full", either "full", "signatures", "none"
+	Rewards                        *bool                            `json:"rewards,omitempty"`                        // default: true
+	Commitment                     Commitment                       `json:"commitment,omitempty"`                     // "processed" is not supported
+	MaxSupportedTransactionVersion *uint8                           `json:"maxSupportedTransactionVersion,omitempty"` // default: nil legacy only
 }
 
 type GetBlockConfigEncoding string
@@ -64,15 +66,10 @@ const (
 
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
 func (c *RpcClient) GetBlock(ctx context.Context, slot uint64) (JsonRpcResponse[GetBlock], error) {
-	return c.processGetBlock(c.Call(ctx, "getBlock", slot))
+	return call[JsonRpcResponse[GetBlock]](c, ctx, "getBlock", slot)
 }
 
 // GetBlockWithConfig returns identity and transaction information about a confirmed block in the ledger
 func (c *RpcClient) GetBlockWithConfig(ctx context.Context, slot uint64, cfg GetBlockConfig) (JsonRpcResponse[GetBlock], error) {
-	return c.processGetBlock(c.Call(ctx, "getBlock", slot, cfg))
-}
-
-func (c *RpcClient) processGetBlock(body []byte, rpcErr error) (res JsonRpcResponse[GetBlock], err error) {
-	err = c.processRpcCall(body, rpcErr, &res)
-	return
+	return call[JsonRpcResponse[GetBlock]](c, ctx, "getBlock", slot, cfg)
 }

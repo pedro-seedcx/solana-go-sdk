@@ -30,26 +30,26 @@ func TestGetTransaction(t *testing.T) {
 						InnerInstructions: []TransactionMetaInnerInstruction{
 							{
 								Index: 0,
-								Instructions: []Instruction{
-									{
-										ProgramIDIndex: 3,
-										Data:           "3Bxs4h24hBtQy9rw",
-										Accounts:       []int{0, 1},
+								Instructions: []any{
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "3Bxs4h24hBtQy9rw",
+										"accounts":       []any{0., 1.},
 									},
-									{
-										ProgramIDIndex: 3,
-										Data:           "9krTDU2LzCSUJuVZ",
-										Accounts:       []int{1},
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "9krTDU2LzCSUJuVZ",
+										"accounts":       []any{1.},
 									},
-									{
-										ProgramIDIndex: 3,
-										Data:           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
-										Accounts:       []int{1},
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
+										"accounts":       []any{1.},
 									},
-									{
-										ProgramIDIndex: 4,
-										Data:           "2",
-										Accounts:       []int{1, 2, 0, 5},
+									map[string]any{
+										"programIdIndex": 4.,
+										"data":           "2",
+										"accounts":       []any{1., 2., 0., 5.},
 									},
 								},
 							},
@@ -161,26 +161,26 @@ func TestGetTransaction(t *testing.T) {
 						InnerInstructions: []TransactionMetaInnerInstruction{
 							{
 								Index: 0,
-								Instructions: []Instruction{
-									{
-										ProgramIDIndex: 3,
-										Data:           "3Bxs4h24hBtQy9rw",
-										Accounts:       []int{0, 1},
+								Instructions: []any{
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "3Bxs4h24hBtQy9rw",
+										"accounts":       []any{0., 1.},
 									},
-									{
-										ProgramIDIndex: 3,
-										Data:           "9krTDU2LzCSUJuVZ",
-										Accounts:       []int{1},
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "9krTDU2LzCSUJuVZ",
+										"accounts":       []any{1.},
 									},
-									{
-										ProgramIDIndex: 3,
-										Data:           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
-										Accounts:       []int{1},
+									map[string]any{
+										"programIdIndex": 3.,
+										"data":           "SYXsBSQy3GeifSEQSGvTbrPNposbSAiSoh1YA85wcvGKSnYg",
+										"accounts":       []any{1.},
 									},
-									{
-										ProgramIDIndex: 4,
-										Data:           "2",
-										Accounts:       []int{1, 2, 0, 5},
+									map[string]any{
+										"programIdIndex": 4.,
+										"data":           "2",
+										"accounts":       []any{1., 2., 0., 5.},
 									},
 								},
 							},
@@ -257,6 +257,65 @@ func TestGetTransaction(t *testing.T) {
 				Id:      1,
 				Error:   nil,
 				Result:  nil,
+			},
+			ExpectedError: nil,
+		},
+		{
+			RequestBody:  `{"jsonrpc":"2.0","id":1,"method":"getTransaction","params":["2vFRWHPwbxFkZMtgcyRPx8Hx1v4TTyvmhYZgYejfwWXQehiaNijP18FEQMpMFZHyJFmTXrWxncZsS6yKYESDBucQ",{"encoding":"base64", "maxSupportedTransactionVersion": 0}]}`,
+			ResponseBody: `{"jsonrpc":"2.0","result":{"blockTime":1666897943,"meta":{"computeUnitsConsumed":185,"err":null,"fee":5000,"innerInstructions":[],"loadedAddresses":{"readonly":[],"writable":[]},"logMessages":["Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP invoke [1]","Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP consumed 185 of 200000 compute units","Program return: 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP AQIDBAU=","Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP success"],"postBalances":[34358789287,1141440],"postTokenBalances":[],"preBalances":[34358794287,1141440],"preTokenBalances":[],"returnData":{"data":["AQIDBAU=","base64"],"programId":"35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP"},"rewards":[],"status":{"Ok":null}},"slot":159780566,"transaction":["AV/vxqOrdrGio45xsX7l9jdCcQDy3VuY/wHlleHEuBuwDUIYO2ce/YpjkRfZHCq7tYSNEwFCRdolqNg2oibR5wUBAAECBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4e0EmQh0otX6HS7HumAryrMtxCzacgpjtG6MY9cJWYYGK9azWH/heD6vSj5deOv9pmPQoZfCmIFJqrW8ixgJLtAQEAAA==","base64"],"version":"legacy"},"id":1}`,
+			RpcCall: func(rc RpcClient) (any, error) {
+				return rc.GetTransactionWithConfig(
+					context.TODO(),
+					"2vFRWHPwbxFkZMtgcyRPx8Hx1v4TTyvmhYZgYejfwWXQehiaNijP18FEQMpMFZHyJFmTXrWxncZsS6yKYESDBucQ",
+					GetTransactionConfig{
+						Encoding:                       TransactionEncodingBase64,
+						MaxSupportedTransactionVersion: pointer.Get[uint8](0),
+					},
+				)
+			},
+			ExpectedResponse: JsonRpcResponse[*GetTransaction]{
+				JsonRpc: "2.0",
+				Id:      1,
+				Error:   nil,
+				Result: &GetTransaction{
+					Slot:      159780566,
+					BlockTime: pointer.Get[int64](1666897943),
+					Version:   "legacy",
+					Meta: &TransactionMeta{
+						Err: nil,
+						Fee: 5000,
+						PreBalances: []int64{
+							34358794287,
+							1141440,
+						},
+						PostBalances: []int64{
+							34358789287,
+							1141440,
+						},
+						LogMessages: []string{
+							"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP invoke [1]",
+							"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP consumed 185 of 200000 compute units",
+							"Program return: 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP AQIDBAU=",
+							"Program 35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP success",
+						},
+						LoadedAddresses: TransactionLoadedAddresses{
+							Writable: []string{},
+							Readonly: []string{},
+						},
+						PreTokenBalances:  []TransactionMetaTokenBalance{},
+						PostTokenBalances: []TransactionMetaTokenBalance{},
+						InnerInstructions: []TransactionMetaInnerInstruction{},
+						ReturnData: &ReturnData{
+							ProgramId: "35HSbe2xiLfid5QJeETGnUsGhkAiJWRKPrEGdQQ5xXrP",
+							Data:      []any{"AQIDBAU=", "base64"},
+						},
+						ComputeUnitsConsumed: pointer.Get[uint64](185),
+					},
+					Transaction: []any{
+						"AV/vxqOrdrGio45xsX7l9jdCcQDy3VuY/wHlleHEuBuwDUIYO2ce/YpjkRfZHCq7tYSNEwFCRdolqNg2oibR5wUBAAECBj5w2ZFXmNyj7tuRN89kxw/6+2LN04KBBSUL12sdbN4e0EmQh0otX6HS7HumAryrMtxCzacgpjtG6MY9cJWYYGK9azWH/heD6vSj5deOv9pmPQoZfCmIFJqrW8ixgJLtAQEAAA==",
+						"base64",
+					},
+				},
 			},
 			ExpectedError: nil,
 		},
