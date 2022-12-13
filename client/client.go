@@ -193,23 +193,12 @@ func (c *Client) rpcMultipleAccountsToClientAccountInfos(values []rpc.AccountInf
 			continue
 		}
 
-		data, ok := v.Data.([]any)
-		if !ok {
-			return []AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
-		}
-		if data[1] != string(rpc.AccountEncodingBase64) {
-			return []AccountInfo{}, fmt.Errorf("encoding mistmatch")
-		}
-		rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
-		if err != nil {
-			return []AccountInfo{}, fmt.Errorf("failed to base64 decode data")
-		}
 		res[i] = AccountInfo{
 			Lamports:   v.Lamports,
-			Owner:      common.PublicKeyFromString(v.Owner),
+			Owner:      common.PublicKeyFromString(v.Data.Parsed.Info.Owner),
 			Executable: v.Executable,
 			RentEpoch:  v.RentEpoch,
-			Data:       rawData,
+			Data:       []byte{},
 		}
 	}
 	return res, nil
