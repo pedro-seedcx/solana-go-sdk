@@ -114,7 +114,8 @@ type AccountInfo struct {
 // GetAccountInfo return account's info
 func (c *Client) GetAccountInfo(ctx context.Context, base58Addr string) (AccountInfo, error) {
 	return c.processGetAccountInfo(c.RpcClient.GetAccountInfoWithConfig(ctx, base58Addr, rpc.GetAccountInfoConfig{
-		Encoding: rpc.AccountEncodingBase64,
+		Encoding:   rpc.AccountEncodingJsonParsed,
+		Commitment: rpc.CommitmentConfirmed,
 	}))
 }
 
@@ -145,23 +146,12 @@ func (c *Client) rpcAccountInfoToClientAccountInfo(v rpc.AccountInfo) (AccountIn
 		return AccountInfo{}, nil
 	}
 
-	data, ok := v.Data.([]any)
-	if !ok {
-		return AccountInfo{}, fmt.Errorf("failed to cast raw response to []any")
-	}
-	if data[1] != string(rpc.AccountEncodingBase64) {
-		return AccountInfo{}, fmt.Errorf("encoding mistmatch")
-	}
-	rawData, err := base64.StdEncoding.DecodeString(data[0].(string))
-	if err != nil {
-		return AccountInfo{}, fmt.Errorf("failed to base64 decode data")
-	}
 	return AccountInfo{
 		Lamports:   v.Lamports,
-		Owner:      common.PublicKeyFromString(v.Owner),
+		Owner:      common.PublicKeyFromString(v.Data.Parsed.Info.Owner),
 		Executable: v.Executable,
 		RentEpoch:  v.RentEpoch,
-		Data:       rawData,
+		Data:       []byte{},
 	}, nil
 }
 
@@ -549,11 +539,14 @@ type GetBlockTransaction struct {
 
 // GetBlock returns identity and transaction information about a confirmed block in the ledger
 func (c *Client) GetBlock(ctx context.Context, slot uint64) (GetBlockResponse, error) {
+	zeroVersion := new(uint8)
+	*zeroVersion = 0
 	res, err := c.RpcClient.GetBlockWithConfig(
 		ctx,
 		slot,
 		rpc.GetBlockConfig{
-			Encoding: rpc.GetBlockConfigEncodingBase64,
+			Encoding:                       rpc.GetBlockConfigEncodingBase64,
+			MaxSupportedTransactionVersion: zeroVersion,
 		},
 	)
 	err = checkJsonRpcResponse(res, err)
